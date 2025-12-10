@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/fragments :: head}">
+    <title>Dashboard</title>
+</head>
+
+<body>
+
+<nav th:replace="~{fragments/fragments :: header}"></nav>
+
+
+<main class="content p-4">
+    <div class="container-fluid">
+
+        <!-- Welcome -->
+        <div class="mb-4">
+            <div class="alert alert-light border">
+                <div class="d-flex align-items-center">
+                    <i class="bi me-2"></i>
+                    <div>
+                        <strong>Chào mừng!</strong>
+                        <div class="small">Quyền của bạn: <span class="fw-semibold"
+                                                                sec:authentication="principal.authorities">Roles</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simple cards (role-based) -->
+        <div class="row g-3">
+            <!-- Admin -->
+            <div sec:authorize="hasRole('ADMIN')" class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Phòng Ban</h6>
+                            <small class="text-muted">Quản lý phòng ban</small>
+                        </div>
+                        <a th:href="@{/admin/departments}" class="btn btn-outline-primary btn-sm">
+                            Mở <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div sec:authorize="hasAnyRole('ADMIN','MANAGER')" class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Nhân Viên</h6>
+                            <small class="text-muted">Danh sách & quản lý</small>
+                        </div>
+                        <a th:href="@{/manager/employees}" class="btn btn-outline-success btn-sm">
+                            Mở <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div sec:authorize="hasAnyRole('ADMIN','MANAGER','EMPLOYEE')" class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Dự Án</h6>
+                            <small class="text-muted">Xem tình trạng dự án</small>
+                        </div>
+                        <a th:href="@{/manager/projects}" class="btn btn-outline-info btn-sm">
+                            Mở <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional: lightweight section for quick links -->
+        <div class="mt-4">
+            <h6 class="mb-2">Liên kết nhanh</h6>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/}"><i class="bi bi-house"></i> Trang chủ</a>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/employee/profile}"
+                   sec:authorize="hasRole('EMPLOYEE')"><i class="bi bi-person"></i> Hồ sơ</a>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button class="btn btn-sm btn-outline-danger">Đăng xuất</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<footer th:replace="~{fragments/fragments :: footer}"></footer>
+<div th:replace="~{fragments/fragments :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments :: head"></head>
+
+<body class="d-flex flex-column min-vh-100">
+
+
+<nav th:replace="fragments/fragments :: header"></nav>
+
+<main class="content p-4">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Danh Sách Phòng Ban</h3>
+            <a th:href="@{/admin/departments/new}" class="btn btn-primary btn-sm">Thêm Phòng Ban</a>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Table -->
+        <div class="card">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width:5%">#</th>
+                        <th>Tên Phòng Ban</th>
+                        <th>Mô Tả</th>
+                        <th style="width:12%">Số Nhân Viên</th>
+                        <th style="width:18%">Thao Tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dept, iterStat : ${departments}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td th:text="${dept.departmentName}">Phòng A</td>
+                        <td th:text="${dept.description}">Mô tả...</td>
+                        <td>
+                            <span class="badge bg-info" th:text="${dept.employeeCount}">0</span>
+                        </td>
+                        <td class="text-nowrap">
+                            <a th:href="@{/admin/departments/edit/{id}(id=${dept.departmentId})}"
+                               class="btn btn-sm btn-outline-warning">Sửa</a>
+
+                            <form th:action="@{/admin/departments/delete/{id}(id=${dept.departmentId})}"
+                                  method="post" class="d-inline-block ms-1"
+                                  onsubmit="return confirm('Bạn có chắc muốn xóa?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(departments)}">
+                        <td colspan="5" class="text-center text-muted py-4">Chưa có phòng ban</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="fragments/fragments :: footer"></footer>
+<div th:replace="fragments/fragments :: scripts"></div>
+
+</body>
+</html>
